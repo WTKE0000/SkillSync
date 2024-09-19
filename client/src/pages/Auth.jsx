@@ -12,6 +12,8 @@ const Auth = () => {
   let from = location?.state?.from?.pathname || "/";
 
   if (user.token) {
+    let user_token = user.token
+    localStorage.setItem("User Token",user_token)
     return window.location.replace(from);
   }
   return (
