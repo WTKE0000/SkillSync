@@ -1,9 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dispatch } from "./store";
-import { users } from "../utils/data";
 
 const initialState = {
-  user: JSON.parse(window?.localStorage.getItem("userInfo")) ??{},
+  user: JSON.parse(window?.localStorage.getItem("userInfo")) ?? {},
 };
 
 const userSlice = createSlice({
@@ -11,11 +9,12 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     login(state, action) {
-      state.user = action.payload.user;
+      console.log("Logging in with user data:", action.payload);
+      state.user = action.payload; // Ensure user is set correctly
     },
     logout(state) {
       state.user = null;
-      localStorage?.removeItem("userInfo");
+      localStorage.removeItem("userInfo");
     },
   },
 });
@@ -23,13 +22,15 @@ const userSlice = createSlice({
 export default userSlice.reducer;
 
 export function Login(user) {
-  return (dispatch, getState) => {
-    dispatch(userSlice.actions.login(user));
+  return (dispatch) => {
+    const userData = { token: user.token, ...user }; // Ensure correct structure
+    localStorage.setItem("userInfo", JSON.stringify(userData));
+    dispatch(userSlice.actions.login(userData)); // Dispatch with the entire userData
   };
 }
 
 export function Logout() {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(userSlice.actions.logout());
   };
 }
