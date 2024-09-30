@@ -22,7 +22,7 @@ export const apiRequest = async ({ url, token, data, method }) => {
 
     return result?.data;  // Return the response data
   } catch (error) {
-    console.error("API Request Error:", error);  // Log the error for debugging
+    console.log("API Request Error:", error);  // Log the error for debugging
 
     // Return a structured error object
     return {
@@ -45,7 +45,7 @@ export const handleFileUpload = async (uploadFile) => {
     );
     return response.data.secure_url;  // Return the uploaded image URL
   } catch (error) {
-    console.error("File Upload Error:", error);
+    console.log("File Upload Error:", error);
     throw new Error("Failed to upload file");  // Throw a meaningful error
   }
 };

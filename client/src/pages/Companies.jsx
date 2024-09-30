@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CompanyCard, CustomButton, Header, ListBox } from "../components";
 import { companies } from "../utils/data";
-import { apiRequest, handleFileUpload } from "../utils";
+import { apiRequest, handleFileUpload, updateURL } from "../utils";
+import Loading from "../components/Loading";
 
 
 const Companies = () => {
@@ -38,20 +39,27 @@ const Companies = () => {
         });
 
 console.log(res);
-        // setNumPage(res?.numOfPage);
-        // setRecordsCount(res?.totalCompanies);
-        // setData(res?.data);
+        setNumPage(res?.numOfPage);
+        setRecordsCount(res?.totalCompanies);
+        setData(res?.data);
 
-        // setIsFetching(false);
+        setIsFetching(false);
 
       } catch(e){
         console.log(e);
       }
     };
 
-    const handleSearchSubmit = () => {};
-    const handleShowMore = () => {};
+    const handleSearchSubmit = async(e) => {
+      e.preventDefault()
 
+      await fetchCompanies();
+
+    };
+    const handleShowMore = async (e) => {
+      e.preventDefault();
+      setPage((prev) => prev +1);
+    };
     useEffect(() => {
       fetchCompanies();
     }, [page, sort])
@@ -63,13 +71,14 @@ console.log(res);
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         location={cmpLocation}
-        setLocation={setSearchQuery}
+        setLocation={setCmpLocation}
       />
 
-      <div className='container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 py-6 bg-[#f7fdfd]'>
+      <div className='container mx-auto flex flex-col gap-5 
+      2xl:gap-10 px-5 py-6 bg-[#f7fdfd]'>
         <div className='flex items-center justify-between mb-4'>
           <p className='text-sm md:text-base'>
-            Shwoing: <span className='font-semibold'>1,902</span> Companies
+            Shwoing: <span className='font-semibold'>{recordsCount}</span> Companies
             Available
           </p>
 
@@ -87,7 +96,7 @@ console.log(res);
 
           {isFetching && (
             <div className='mt-10'>
-              <Loading />
+             <Loading />
             </div>
           )}
 

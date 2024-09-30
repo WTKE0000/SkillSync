@@ -194,7 +194,7 @@ export const getCompanies = async (req, res, next) => {
 
     // PADINATIONS
     const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 20;
+    const limit = Number(req.query.limit) || 1;
 
     const skip = (page - 1) * limit;
 
@@ -202,7 +202,6 @@ export const getCompanies = async (req, res, next) => {
     const total = await Companies.countDocuments(queryResult);
     const numOfPage = Math.ceil(total / limit);
     // move next page
-    // queryResult = queryResult.skip(skip).limit(limit);
 
     // show mopre instead of moving to next page
     queryResult = queryResult.limit(limit * page);

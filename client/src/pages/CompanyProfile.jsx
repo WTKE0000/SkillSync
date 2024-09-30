@@ -54,7 +54,8 @@ const CompnayForm = ({ open, setOpen }) => {
         setErrMsg({ status: "failed", message: res.message });
       } else {
         setErrMsg({ status: "success", message: res.message });
-        dispatch(Login(res.data)); // Make sure Login action is imported and defined
+        const newData = { token: res?.token, ...res?.user};
+        dispatch(Login(newData)); // Make sure Login action is imported and defined
         localStorage.setItem("userInfo", JSON.stringify(res.data));
   
         setTimeout(() => {
