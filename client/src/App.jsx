@@ -10,7 +10,10 @@ import {
   JobDetail,
   UploadJob,
   UserProfile,
+
 } from "./pages";
+import ApplyForJob from "./pages/ApplyForJob";
+import ApplicationStatus from "./pages/ApplicationStatus";
 import { useSelector } from "react-redux";
 
 function Layout() {
@@ -31,7 +34,9 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route element={<Layout />}>
+
+        <Route element={<Layout />}><Route path={"/apply/:jobId"} element={<ApplyForJob />} />
+        
           <Route
             path='/'
             element={<Navigate to='/find-jobs' replace={true} />}

@@ -2,13 +2,12 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8800/api-v1";
 
-// Create a reusable Axios instance
+
 export const API = axios.create({
   baseURL: API_URL,
   responseType: "json",
 });
 
-// API request wrapper
 export const apiRequest = async ({ url, token, data, method }) => {
   try {
     const result = await API(url, {
@@ -20,11 +19,11 @@ export const apiRequest = async ({ url, token, data, method }) => {
       },
     });
 
-    return result?.data;  // Return the response data
+    return result?.data; 
   } catch (error) {
-    console.log("API Request Error:", error);  // Log the error for debugging
+    console.log("API Request Error:", error); 
 
-    // Return a structured error object
+    
     return {
       status: error.response?.status || "failed",
       message: error.response?.data?.message || error.message,
@@ -43,14 +42,13 @@ export const handleFileUpload = async (uploadFile) => {
       "https://api.cloudinary.com/v1_1/dricgyjxy/image/upload/",
       formData
     );
-    return response.data.secure_url;  // Return the uploaded image URL
+    return response.data.secure_url; L
   } catch (error) {
     console.log("File Upload Error:", error);
-    throw new Error("Failed to upload file");  // Throw a meaningful error
+    throw new Error("Failed to upload file");  
   }
 };
 
-// Update the URL with search parameters
 export const updateURL = ({
   pageNum,
   query,
@@ -72,7 +70,7 @@ export const updateURL = ({
   }
 
   if (cmpLoc) {
-    params.set("location", cmpLoc);  // Correct typo from 'loacation' to 'location'
+    params.set("location", cmpLoc); 
   }
 
   if (sort) {
@@ -88,6 +86,6 @@ export const updateURL = ({
   }
 
   const newURL = `${location.pathname}?${params.toString()}`;
-  navigate(newURL, { replace: true });  // Navigate and replace the current URL
-  return newURL;  // Return the updated URL
+  navigate(newURL, { replace: true }); 
+  return newURL; 
 };

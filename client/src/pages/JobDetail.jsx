@@ -8,8 +8,13 @@ import { CustomButton, JobCard } from "../components";
 import { useSelector } from "react-redux";
 import { apiRequest } from "../utils";
 import Loading from "../components/Loading";
+import { useNavigate } from "react-router-dom"; 
+
+
+
 
 const JobDetail = () => {
+  const navigate = useNavigate();
   const {id} = useParams();
   const [job, setJob] = useState(null);
   const [similarJobs, setSimilarJobs] = useState([]);
@@ -201,6 +206,7 @@ const JobDetail = () => {
           ) : (
             <CustomButton
             title='Apply Now'
+            onClick={() => navigate(`/apply/${job._id}`)}
             containerStyles={`w-full flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
           />
           )}
