@@ -252,7 +252,7 @@ export const deleteJobPost = async (req, res, next) => {
 
     res.status(200).send({
       success: true,
-      messsage: "Job Post Deleted Successfully.",
+      messsage: "Job Post Delted Successfully.",
     });
   } catch (error) {
     console.log(error);

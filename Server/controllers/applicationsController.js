@@ -1,52 +1,73 @@
 import Application from "../models/applicationsModel.js";
 import Job from "../models/jobsModel.js";
 import User from "../models/userModel.js";
+import Companies from '../models/companiesModel.js';
+import cloudinary from "cloudinary"
+
+
+async function uploadFile(file) {
+  try {
+    return new Promise((resolve, reject) => {
+      cloudinary.v2.uploader.upload_stream(
+       {resource_type: "auto", public_id: file.originalname},
+       (error, result)=>{
+        if(error) return reject(error);
+        if(result && result.url){
+          resolve(result.url)
+        }else{
+          reject(new Error("Upload result does not contain URL"))
+        }
+       }
+      ).end(file.buffer)
+    });
+  } catch (error) {
+    console.log("Cloudinary error: ",error)
+    throw new Error("Error Uploading file")
+  }
+}
 
 export const applyForJob = async (req, res) => {
   try {
-    console.log("Full Request Object:", req);
-    console.log("Uploaded File:", req.file);
-    
+    console.log("Request Body:", req.body); // Log the request body
     
     const { jobId, coverLetter } = req.body;
-    console.log("Received Job ID:", jobId);
-
     const userId = req.user._id;
+    const file = req.file; // Access the uploaded file directly
 
+    // Check if job exists
     const job = await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({ message: "Job not found." });
     }
 
-    // const existingApplication = await Application.findOne({ job: jobId, user: userId });
-    // if (existingApplication) {
-    //   return res.status(400).json({ message: "You have already applied for this job." });
-    // }
+    // Check if the user has already applied
+    const existingApplication = await Application.findOne({ job: jobId, user: userId });
+    if (existingApplication) {
+      return res.status(400).json({ message: "You have already applied for this job." });
+    }
 
     // Handle resume upload
-    // let resumeUrl = null;
-    // if (req.file) {
-    //   const uploadResult = await cloudinary.v2.uploader.upload(req.file.path, {
-    //     folder: 'resumes',
-    //     resource_type: 'raw',
-    //   });
-    //   resumeUrl = uploadResult.secure_url;
-    // } else {
-    //   return res.status(400).json({ message: "Resume is required." });
-    // }
+    let resumeUrl = null; // Declare resumeUrl
+    if (file) {
+      console.log("Uploaded File:", file); // Log the uploaded file
+      resumeUrl = await uploadFile(file); // Use helper function to upload the file
+    } else {
+      return res.status(400).json({ message: "Resume is required." });
+    }
 
+    // Create a new application
     const application = new Application({
       job: jobId,
       user: userId,
       coverLetter,
-      // resume: resumeUrl,
+      resume: resumeUrl,
     });
 
     await application.save();
-    res.status(200).json({ message: "Application submitted successfully", application });
+    res.status(201).json({ message: "Application submitted successfully", application });
   } catch (error) {
     console.error("Error applying for job:", error);
-    res.status(500).json({ message: "Error applying for job." });
+    res.status(500).json({ message: "Error applying for the job." });
   }
 };
 // Get all applications for a user
