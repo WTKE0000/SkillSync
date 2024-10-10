@@ -3,6 +3,7 @@ import Jobs from "../models/jobsModel.js";
 import Companies from "../models/companiesModel.js";
 
 export const createJob = async (req, res, next) => {
+  console.log("createJob");
   try {
     const {
       jobTitle,
@@ -27,7 +28,8 @@ export const createJob = async (req, res, next) => {
       return;
     }
 
-    const id = req.body.user.userId;
+    console.log(req.body);
+    const id = req.body.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(404).send(`No Company with id: ${id}`);
