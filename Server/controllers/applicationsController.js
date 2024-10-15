@@ -2,7 +2,6 @@ import Application from "../models/applicationsModel.js";
 import Job from "../models/jobsModel.js";
 import User from "../models/userModel.js";
 import Companies from '../models/companiesModel.js';
-import cloudinary from "cloudinary"
 
 
 async function uploadFile(file) {
@@ -30,8 +29,8 @@ export const applyForJob = async (req, res) => {
   try {
     console.log("Request Body:", req.body); // Log the request body
     
-    const { jobId, coverLetter } = req.body;
-    const userId = req.user._id;
+    const { jobId, coverLetter, resumeUrl } = req.body;
+    const userId = req.body.user.userId;
     const file = req.file; // Access the uploaded file directly
 
     // Check if job exists
@@ -46,21 +45,21 @@ export const applyForJob = async (req, res) => {
       return res.status(400).json({ message: "You have already applied for this job." });
     }
 
-    // Handle resume upload
-    let resumeUrl = null; // Declare resumeUrl
-    if (file) {
-      console.log("Uploaded File:", file); // Log the uploaded file
-      resumeUrl = await uploadFile(file); // Use helper function to upload the file
-    } else {
-      return res.status(400).json({ message: "Resume is required." });
-    }
+    // // Handle resume upload
+    // let resumeUrl = null; // Declare resumeUrl
+    // if (file) {
+    //   console.log("Uploaded File:", file); // Log the uploaded file
+    //   resumeUrl = await uploadFile(file); // Use helper function to upload the file
+    // } else {
+    //   return res.status(400).json({ message: "Resume is required." });
+    // }
 
     // Create a new application
     const application = new Application({
       job: jobId,
       user: userId,
       coverLetter,
-      resume: resumeUrl,
+      resumeUrl,
     });
 
     await application.save();
@@ -73,14 +72,21 @@ export const applyForJob = async (req, res) => {
 // Get all applications for a user
 export const getUserApplications = async (req, res) => {
   try {
-    const applications = await Application.find({ user: req.params.userId }).populate("job").sort("-createdAt");
+    const applications = await Application.find({ user: req.params.userId })
+      .populate({
+        path: "job",
+        populate: {
+          path: "company",
+          select: "name logo description"
+        }
+      })
+      .sort("-createdAt");
     res.status(200).json(applications);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching applications." });
   }
 };
-
 // Cancel/Delete an application
 export const deleteApplication = async (req, res) => {
   try {
