@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Linkedin } from "../assets";
 import moment from "moment";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { jobs } from "../utils/data";
 import { CustomButton, JobCard } from "../components";
 import { useSelector } from "react-redux";
@@ -21,6 +21,7 @@ const JobDetail = () => {
   const [selected, setSelected] = useState("0");
   const { user } = useSelector((state) => state.user);
   const [isFetching, setIsFetching] = useState(false);
+  const [applicant, setApplicant] = useState([]);
 
   const getJobDetails = async() => {
 
@@ -39,6 +40,22 @@ const JobDetail = () => {
       console.log(error)
     }
   };
+
+  useEffect(() => {
+    const fetchApplicant = async () => {
+      try {
+        const res = await apiRequest({
+          url: `/applications/job/${id}`,
+          method: "GET",
+        });
+        setApplicant(res);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchApplicant();
+  }, [id]);
 
   const handleDeletePost = async()=>{
     try{
@@ -121,12 +138,26 @@ const JobDetail = () => {
               </p>
             </div>
 
-            <div className='bg-[#fed0ab] w-40 h-16 px-6 rounded-lg flex flex-col items-center justify-center'>
-              <span className='text-sm'>No. of Applicants</span>
-              <p className='text-lg font-semibold text-gray-700'>
-                {job?.application?.length}
-              </p>
-            </div>
+            {
+              user?.name === job?.company?.name ? (
+                <Link to={`/applicants/${job?._id}`} className='bg-[#fed0ab] w-40 h-16 px-6 rounded-lg flex flex-col items-center justify-center'>
+                <span className='text-sm'>No. of Applicants</span>
+                <p className='text-lg font-semibold text-gray-700'>
+                  {applicant?.length}
+                </p>
+                </Link>
+              ) : (
+                <div className='bg-[#fed0ab] w-40 h-16 px-6 rounded-lg flex flex-col items-center justify-center'>
+                <span className='text-sm'>No. of Applicants</span>
+                <p className='text-lg font-semibold text-gray-700'>
+                  {applicant?.length}
+                </p>
+                </div>
+              )
+            }
+
+
+           
 
             <div className='bg-[#cecdff] w-40 h-16 px-6 rounded-lg flex flex-col items-center justify-center'>
               <span className='text-sm'>No. of Vacancies</span>

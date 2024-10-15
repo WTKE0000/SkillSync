@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CustomButton, JobCard, JobTypes, TextInput } from "../components";
+import { CustomButton, JobCard, JobTypes, Loading, TextInput } from "../components";
 import { jobs } from "../utils/data";
 import { useSelector } from "react-redux";
 import { apiRequest } from "../utils";
@@ -25,7 +25,11 @@ const UploadJob = () => {
     setIsLoading(true);
     setErrMsg(null);
 
-       const newData = {...data, jobType: jobType};
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+   
+
+       const newData = {...data, jobType: jobType, userId: userInfo._id};
+       
       try{
         const res = await apiRequest({
           url: "/jobs/upload-job",
@@ -177,7 +181,7 @@ const UploadJob = () => {
             )}
             <div className='mt-2'>
               {isLoading ? (
-                <Loading/>
+                <Loading/>  
               ) : (
               <CustomButton
                 type='submit'
