@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { apiRequest } from "../utils";
+import { apiRequest, handleFileUpload, uploadVideoToS3 } from "../utils";
 import { CustomButton, Loading } from "../components";
 
 const ApplyForJob = () => {
@@ -14,27 +14,33 @@ const ApplyForJob = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const resumeUrl = resume && (await handleFileUpload(resume)); 
+      // Upload the file and get the URL
+      const resumeUrl = resume ? await uploadVideoToS3(resume) : null;
+
       const applicationData = {
         jobId,
         coverLetter: data.coverLetter,
         resumeUrl,
       };
-  
+
+      console.log("Application Data:", applicationData);
+
+      // Uncomment this section to actually submit the data
       const res = await apiRequest({
         url: "/applications/apply",
         method: "POST",
         data: applicationData,
       });
-  
+
       if (res.status === "success") {
         setApplicationStatus("Application submitted successfully.");
       } else {
         setApplicationStatus("Failed to submit application.");
       }
+      setApplicationStatus("Application data logged successfully (replace with actual request).");
     } catch (error) {
-      console.error(error);
-      setApplicationStatus("An error occurred.");
+      console.error("Error during application:", error);
+      setApplicationStatus("An error occurred during the application.");
     } finally {
       setIsSubmitting(false);
     }
@@ -65,6 +71,7 @@ const ApplyForJob = () => {
               onChange={(e) => setResume(e.target.files[0])}
               className='rounded border border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               required
+              accept=".pdf"
             />
           </div>
           <div className='mt-2'>
