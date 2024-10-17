@@ -46,8 +46,6 @@ const FindJobs = () => {
         url: "/jobs" + newURL,
         method: "GET",
       });
-
-        console.log(res);
       setNumPage(res?.numOfPage);
       setRecordCount(res?.totalJobs);
       setData(res?.data);

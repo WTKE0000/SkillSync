@@ -6,6 +6,7 @@ const ApplicationStatus = () => {
   const { user } = useSelector((state) => state.user);
   const [applications, setApplications] = useState([]);
   const [selectedApp, setSelectedApp] = useState(null);
+  
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -43,11 +44,17 @@ const ApplicationStatus = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {applications.map((app) => (
+            {applications?.map((app) => (
               <tr key={app._id} onClick={() => handleRowClick(app)} className="hover:bg-gray-50 cursor-pointer">
                 <td className="px-6 py-4 whitespace-nowrap">{app.job.jobTitle}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{app.job.company.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{app.status}</td>
+                <td className={`px-6 py-4 whitespace-nowrap ${
+                                app.status === 'accepted' ? 'text-green-600' :
+                                app.status === 'pending' ? 'text-yellow-600' :
+                                app.status === 'rejected' ? 'text-red-600' : ''
+                              }`}>
+                                {app.status}
+                              </td>
               </tr>
             ))}
           </tbody>

@@ -109,7 +109,7 @@ export const deleteApplication = async (req, res) => {
 export const getJobApplications = async (req, res) => {
   try {
     const applications = await Application.find({ job: req.params.jobId })
-      .populate("user", "name email experience education")
+      .populate("user")
       .populate("job")
       .sort("-createdAt");
     res.status(200).json(applications);

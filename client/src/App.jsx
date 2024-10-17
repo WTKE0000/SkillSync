@@ -16,6 +16,7 @@ import ApplyForJob from "./pages/ApplyForJob";
 import ApplicationStatus from "./pages/ApplicationStatus";
 import { useSelector } from "react-redux";
 import Applicants from "./pages/applicants";
+import Interview from "./pages/interview";
 
 function Layout() {
   const { user } = useSelector((state) => state.user);
@@ -60,6 +61,9 @@ function App() {
           <Route path={"/company-profile/:id"} element={<CompanyProfile />} />
           <Route path={"/upload-job"} element={<UploadJob />} />
           <Route path={"/job-detail/:id"} element={<JobDetail />} />
+          <Route path={"/interviews"} element={<Interview />} />
+
+
 
         </Route>
 
@@ -72,3 +76,4 @@ function App() {
 }
 
 export default App;
+                     

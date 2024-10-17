@@ -272,6 +272,9 @@ const CompanyProfile = () => {
                     containerStyles={`text-blue-600 py-1.5 px-3 md:px-5 focus:outline-none  rounded text-sm md:text-base border border-blue-600`}
                   />
                 </Link>
+                <Link to="/interviews" className=' bg-green-400 py-1.5 px-3 md:px-5 focus:outline-none text-white rounded text-sm md:text-base '>
+                Check Interviews
+                </Link>
               </div>
             )}
         </div>
