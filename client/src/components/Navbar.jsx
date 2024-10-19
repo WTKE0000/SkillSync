@@ -125,6 +125,12 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
+              <Link to ={user?.accountType ==="seeker" ? "/interviewsUser" : ''}>
+              {user?.accountType === "seeker" ? "interviews" : 
+              ""}
+              </Link>
+            </li>
+            <li>
               <Link to='/about-us'>About</Link>
             </li>
           </ul>

@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import React from 'react'
 import { Link, useParams } from "react-router-dom";
-import { apiRequest } from '../utils';
+import { apiRequest, createLink } from '../utils';
+import { format } from 'date-fns';
 
 export default function Applicants() {
     const {id} = useParams();
     const [applicants, setApplicants] = useState(null);
     const [selectedApp, setSelectedApp] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+  const [showInterviewForm, setShowInterviewForm] = useState(false);
+  const [interviewDate, setInterviewDate] = useState('');
+  const [interviewTime, setInterviewTime] = useState('');
     const [message, setMessage] = useState(null);
+    const [isBookingInterview, setIsBookingInterview] = useState(false);
 
     useEffect(() => {
         const fetchApplicant = async () => {
@@ -29,6 +34,7 @@ export default function Applicants() {
       const handleRowClick = (app) => {
         setSelectedApp(app);
       };
+
     
       const updateApplicationStatus = async (applicationId, newStatus) => {
         if (window.confirm(`Are you sure you want to change the status to ${newStatus}?`)) {
@@ -58,6 +64,58 @@ export default function Applicants() {
           } finally {
             setIsLoading(false);
           }
+        }
+      };
+
+      const handleInterviewFormSubmit = async (e) => {
+        e.preventDefault();
+        setIsBookingInterview(true);
+
+        const interviewLink = await createLink()
+
+      
+
+        const dataInterview = {
+          applicant: selectedApp.user._id,
+          user: selectedApp.job.company,
+          job: selectedApp.job._id,
+          interviewDate: format(new Date(interviewDate), 'yyyy-MM-dd'),
+          interviewTime: format(new Date(`2000-01-01T${interviewTime}`), 'HH:mm'),
+          interviewLink: interviewLink.url,
+        }
+
+        try {
+          const token = localStorage.getItem('User Token');
+          if (!token) {
+            throw new Error('No authentication token found');
+          }// Log the interview data for debugging
+          const res = await apiRequest({
+            url: "/interviews/book",
+            method: "POST",
+            data: dataInterview,
+            token: token,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          console.log('Interview booked successfully:', res);
+          setShowInterviewForm(false);
+          setInterviewDate('');
+          setInterviewTime('');
+          setIsBookingInterview(false);
+          setMessage({ type: 'success', text: 'Interview booked successfully' });
+          return res;
+        } catch (error) {
+          console.error('Error booking interview:', error);
+          if (error.response) {
+            console.error('Response headers:', error.response.headers);
+          }
+          setMessage({ type: 'error', text: `Failed to book interview: ${error.message}` });
+          setShowInterviewForm(false);
+          setInterviewDate('');
+          setInterviewTime('');
+          setIsBookingInterview(false);
         }
       };
 
@@ -120,7 +178,12 @@ export default function Applicants() {
               {isLoading ? 'Updating...' : 'Rejected'}
             </button>
             {selectedApp.status === 'accepted' && (
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Book interview</button>
+              <button 
+                onClick={() => setShowInterviewForm(true)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Book interview
+              </button>
             )}
             </div>
 
@@ -131,6 +194,59 @@ export default function Applicants() {
             <a href={selectedApp.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 mb-4 block">View Resume</a>
             <button onClick={() => setSelectedApp(null)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Close</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showInterviewForm && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4">Book Interview with daily.io</h2>
+            <form onSubmit={handleInterviewFormSubmit}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  id="date"
+                  value={interviewDate}
+                  onChange={(e) => setInterviewDate(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">
+                  Time
+                </label>
+                <input
+                  type="time"
+                  id="time"
+                  value={interviewTime}
+                  onChange={(e) => setInterviewTime(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  disabled={isBookingInterview}
+                >
+                  {isBookingInterview ? 'Booking...' : 'Book'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowInterviewForm(false)}
+                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  disabled={isBookingInterview}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

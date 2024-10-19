@@ -130,3 +130,25 @@ export const uploadVideoToS3 = async (video) => {
     throw error;
   }
 };
+
+export const createLink = async () => {
+  try {
+    const result = await API("https://api.daily.co/v1/rooms", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization":`Bearer a5362f55e9e97b06e882c9c01fd6b796ab7e47a100a549a6295a23e7d553895c`
+      },
+    });
+
+    return result?.data; 
+  } catch (error) {
+    console.log("API Request Error:", error); 
+
+    
+    return {
+      status: error.response?.status || "failed",
+      message: error.response?.data?.message || error.message,
+    };
+  }
+};

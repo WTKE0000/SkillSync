@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import React from 'react'
 import { apiRequest } from '../utils';
 
-export default function Interview() {
+export default function UserInterview() {
   const [interviews, setInterviews] = useState([])
 
 
@@ -15,7 +15,7 @@ export default function Interview() {
       console.log(user?._id)
       try {
         const res = await apiRequest({
-          url: `/interviews/company/${user?._id}`,
+          url: `/interviews/user/${user?._id}`,
           method: "GET",
         });
 
@@ -44,7 +44,7 @@ export default function Interview() {
         <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">position</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
@@ -56,7 +56,7 @@ export default function Interview() {
 
           {interviews?.map((app) => (
               <tr key={app._id} onClick={() => handleRowClick(app)} className="hover:bg-gray-50 cursor-pointer">
-                <td className="px-6 py-4 whitespace-nowrap">{app.applicant?.firstName + " " + app.applicant?.lastName}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{app.job.company.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{app.job.jobTitle}</td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 {app.interviewDate}
@@ -75,8 +75,7 @@ export default function Interview() {
           <div className="bg-white flex flex-col justify-between  p-8 rounded-lg shadow-xl max-w-[400px] w-full h-[200px]">
             <div>
             <div className='w-full flex items-center justify-between'>
-            <p className="mb-2"><span className="font-semibold">User Name:</span> {selectedApp.applicant?.firstName + " " + selectedApp.applicant?.lastName}</p>
-            <p className="mb-2"><span className="font-semibold">Email:</span> {selectedApp.applicant?.email}</p>
+            <p className="mb-2"><span className="font-semibold">User Name:</span> {selectedApp.job.company.name}</p>
             </div>
 
             </div>

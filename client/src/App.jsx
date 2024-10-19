@@ -17,6 +17,7 @@ import ApplicationStatus from "./pages/ApplicationStatus";
 import { useSelector } from "react-redux";
 import Applicants from "./pages/applicants";
 import Interview from "./pages/interview";
+import UserInterview from "./pages/userInterviews";
 
 function Layout() {
   const { user } = useSelector((state) => state.user);
@@ -47,6 +48,7 @@ function App() {
           <Route path='/companies' element={<Companies />} />
           <Route path='/applications' element={<ApplicationStatus />} />
           <Route path='/applicants/:id' element={<Applicants />} />
+          <Route path='/interviewsUser' element={<UserInterview />} />
           
           <Route
             path={
