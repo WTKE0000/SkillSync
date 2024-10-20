@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import {
+  getAllCompanies,
   getCompanies,
   getCompanyById,
   getCompanyJobListing,
@@ -35,5 +36,7 @@ router.get("/get-company/:id", getCompanyById);
 
 // UPDATE DATA
 router.put("/update-company", userAuth, updateCompanyProfile);
+
+router.get("/getAllCompanies", userAuth, getAllCompanies);
 
 export default router;

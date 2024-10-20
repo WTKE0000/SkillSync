@@ -139,3 +139,23 @@ export const updateApplicationStatus = async (req, res) => {
     res.status(500).json({ message: "Error updating application status." });
   }
 };
+
+// Get all applications
+export const getAllApplications = async (req, res) => {
+  try {
+    const applications = await Application.find()
+      .populate("user")
+      .populate({
+        path: "job",
+        populate: {
+          path: "company",
+          select: "name logo description"
+        }
+      })
+      .sort("-createdAt");
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching all applications." });
+  }
+};

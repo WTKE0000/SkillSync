@@ -19,8 +19,6 @@ export default function Interview() {
           method: "GET",
         });
 
-        console.log(res)
-
         setInterviews(res);
       } catch (error) {
         console.error(error);
@@ -57,7 +55,7 @@ export default function Interview() {
           {interviews?.map((app) => (
               <tr key={app._id} onClick={() => handleRowClick(app)} className="hover:bg-gray-50 cursor-pointer">
                 <td className="px-6 py-4 whitespace-nowrap">{app.applicant?.firstName + " " + app.applicant?.lastName}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{app.job.jobTitle}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{app.job?.jobTitle}</td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 {app.interviewDate}
                               </td>

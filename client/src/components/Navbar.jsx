@@ -134,6 +134,14 @@ const Navbar = () => {
               <Link to='/about-us'>About</Link>
             </li>
           </ul>
+          <div className="bg-blue-500 p-2">
+          
+            <Link to ={user?.accountType ==="admin" ? "/admin" : ''}>
+              {user?.accountType === "admin" ? "Open control panel" : 
+              ""}
+              </Link>
+          
+          </div>
           <div className='hidden lg:block'>
             {!user?.token ? (
               <Link to='/user-auth'>

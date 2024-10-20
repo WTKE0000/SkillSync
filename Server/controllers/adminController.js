@@ -49,7 +49,18 @@ export const deleteUser = async (req, res) => {
     await Users.findByIdAndDelete(userId);
     res.status(200).json({ message: "User deleted successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting user." });
+    res.status(500).json({ message: "Error deleting user.", error: error.message });
+  }
+};
+
+// Delete a job
+export const deleteJob = async (req, res) => {
+  const { jobId } = req.params;
+  try {
+    await Jobs.findByIdAndDelete(jobId);
+    res.status(200).json({ message: "Job deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting job.", error: error.message });
   }
 };
 

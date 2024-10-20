@@ -39,6 +39,8 @@ const SignUp = ({ open, setOpen }) => {
     }else {
       if(accountType == "seeker"){
         URL = "auth/login"
+      } else if (accountType == "admin") {
+        URL = "auth/admin";
       } else {
         URL = "companies/login";
       }

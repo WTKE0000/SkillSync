@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
       select: true,
     },
     accountType: { type: String, default: "seeker" },
+isAdmin: { type: Boolean, default: false },
     contact: { type: String },
     location: { type: String },
     profileUrl: { type: String },

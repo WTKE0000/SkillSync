@@ -15,7 +15,11 @@ const Auth = () => {
   useEffect(() => {
     if (user.token) {
       localStorage.setItem("User Token", user.token);
-      navigate(from); // Use navigate for redirection
+      if (user.accountType === "admin") {
+        navigate("/admin"); // Redirect to admin page
+      } else {
+        navigate(from); // Use navigate for redirection
+      }
     }
   }, [user, from, navigate]);
 

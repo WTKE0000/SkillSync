@@ -3,6 +3,7 @@ import userAuth from "../middlewares/authMiddleware.js";
 import {
   createJob,
   deleteJobPost,
+  getAllJobs,
   getJobById,
   getJobPosts,
   updateJob,
@@ -23,4 +24,7 @@ router.get("/get-job-detail/:id", getJobById);
 // DELETE JOB POST
 router.delete("/delete-job/:id", userAuth, deleteJobPost);
 
+router.get("/all-jobs", userAuth, getAllJobs);
+
 export default router;
+

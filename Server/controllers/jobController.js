@@ -261,3 +261,21 @@ export const deleteJobPost = async (req, res, next) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+export const getAllJobs = async (req, res, next) => {
+  try {
+    const users = await Jobs.find({}).populate('company');
+
+    res.status(200).json({
+      success: true,
+      users: users,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error fetching users",
+      success: false,
+      error: error.message,
+    });
+  }
+};

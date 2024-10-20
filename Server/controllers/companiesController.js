@@ -296,3 +296,17 @@ export const getCompanyById = async (req, res, next) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+export const getAllCompanies = async (req, res, next) => {
+  try {
+    const companies = await Companies.find().select('-password');
+
+    res.status(200).json({
+      success: true,
+      data: companies,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching companies", error: error.message });
+  }
+};

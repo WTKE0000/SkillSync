@@ -10,7 +10,7 @@ import {
   JobDetail,
   UploadJob,
   UserProfile,
-
+  AdminPage,
 } from "./pages";
 import ApplyForJob from "./pages/ApplyForJob";
 import ApplicationStatus from "./pages/ApplicationStatus";
@@ -71,6 +71,7 @@ function App() {
 
         <Route path='/about-us' element={<About />} />
         <Route path='/user-auth' element={<AuthPage />} />
+<Route path='/admin' element={<AdminPage />} />
       </Routes>
       {user && <Footer />}
     </main>
