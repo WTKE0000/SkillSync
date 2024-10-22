@@ -17,8 +17,18 @@ function MenuList({ user, onClick }) {
   };
   return (
     <div>
+    
       <Menu as='div' className='inline-block text-left'>
+        
         <div className='flex'>
+        <div>
+      {(!user || !user.accountType) && (
+        <Link to="/premium">
+          Premium
+        </Link>
+      )}
+    </div>
+
           <Menu.Button className='inline-flex gap-2 w-full rounded-md bg-white md:px-4 py-2 text-sm font-medium text-slate-700 hover:bg-opacity-20 '>
             <div className='leading[80px] flex flex-col items-start'>
               <p className='text-sm font-semibold '>
@@ -38,6 +48,7 @@ function MenuList({ user, onClick }) {
               aria-hidden='true'
             />
           </Menu.Button>
+          
         </div>
         <Transition
           as={Fragment}

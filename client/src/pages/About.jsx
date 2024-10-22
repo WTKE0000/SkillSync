@@ -13,6 +13,8 @@ competitive job market. Our mission is to bridge the gap between talent and oppo
  Whether you're a job seeker looking to enhance your qualifications or a company seeking to discover top talent, 
 SkillSync offers personalized resources and insights tailored to your needs. 
 Join us in empowering your career journey and unlocking your full potential with SkillSync!
+<br></br>
+NB: NO APPLICANT SHOULD PAY FOR ANY FEE DURING THE RECRUITMENT PROCESS IT IS STRICTLY FORBIDEN
           </p>
         </div>
         <img src={JobImg} alt='About' className='w-auto h-[300px]' />

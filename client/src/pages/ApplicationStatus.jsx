@@ -6,7 +6,6 @@ const ApplicationStatus = () => {
   const { user } = useSelector((state) => state.user);
   const [applications, setApplications] = useState([]);
   const [selectedApp, setSelectedApp] = useState(null);
-  
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -16,20 +15,33 @@ const ApplicationStatus = () => {
           method: "GET",
         });
 
-        console.log(res)
+        console.log('API Response:', res); // Log the response
 
-        setApplications(res);
+        // Check if the response is an array or an object
+        if (Array.isArray(res)) {
+          setApplications(res);
+        } else if (typeof res === 'object' && res !== null) {
+          setApplications(res.applications || []); // Default to empty array if property doesn't exist
+        } else {
+          console.error('Expected an array or an object, but got:', res);
+          setApplications([]); // Resetting to an empty array if the response is not as expected
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchApplications();
+    if (user?._id) {
+      fetchApplications();
+    }
   }, [user]);
 
   const handleRowClick = (app) => {
     setSelectedApp(app);
   };
+
+  // Filter applications to remove those with empty or null job titles
+  const validApplications = applications.filter(app => app.job?.jobTitle);
 
   return (
     <div className="container mx-auto mt-10 px-4 mb-10">
@@ -44,19 +56,25 @@ const ApplicationStatus = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {applications?.map((app) => (
-              <tr key={app._id} onClick={() => handleRowClick(app)} className="hover:bg-gray-50 cursor-pointer">
-                <td className="px-6 py-4 whitespace-nowrap">{app.job.jobTitle}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{app.job.company.name}</td>
-                <td className={`px-6 py-4 whitespace-nowrap ${
-                                app.status === 'accepted' ? 'text-green-600' :
-                                app.status === 'pending' ? 'text-yellow-600' :
-                                app.status === 'rejected' ? 'text-red-600' : ''
-                              }`}>
-                                {app.status}
-                              </td>
+            {validApplications.length > 0 ? (
+              validApplications.map((app) => (
+                <tr key={app._id} onClick={() => handleRowClick(app)} className="hover:bg-gray-50 cursor-pointer">
+                  <td className="px-6 py-4 whitespace-nowrap">{app.job.jobTitle}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{app.job.company.name}</td>
+                  <td className={`px-6 py-4 whitespace-nowrap ${
+                      app.status === 'accepted' ? 'text-green-600' :
+                      app.status === 'pending' ? 'text-yellow-600' :
+                      app.status === 'rejected' ? 'text-red-600' : ''
+                  }`}>
+                    {app.status}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" className="px-6 py-4 text-center">No applications found.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -64,7 +82,7 @@ const ApplicationStatus = () => {
       {selectedApp && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
-            <h2 className="text-xl font-bold mb-4">{selectedApp.jobTitle}</h2>
+            <h2 className="text-xl font-bold mb-4">{selectedApp.job.jobTitle}</h2>
             <p className="mb-2"><span className="font-semibold">Company:</span> {selectedApp.job.company.name}</p>
             <p className="mb-2"><span className="font-semibold">Status:</span> {selectedApp.status}</p>
             <p className="mb-4"><span className="font-semibold">Cover Letter:</span> {selectedApp.coverLetter}</p>
@@ -77,4 +95,4 @@ const ApplicationStatus = () => {
   );
 };
 
-export default ApplicationStatus;
+export default ApplicationStatus;                                             

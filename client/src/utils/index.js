@@ -152,3 +152,31 @@ export const createLink = async () => {
     };
   }
 };
+
+
+
+
+export const createPaymentIntent = async (user) => {
+  try {
+    const result = await API(`${API_URL}/payment/process_payment`, {
+      method: "POST",
+      data: JSON.stringify({
+        user: user,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+     
+    });
+
+    return result?.data; 
+  } catch (error) {
+    console.log("API Request Error:", error); 
+
+    
+    return {
+      status: error.response?.status || "failed",
+      message: error.response?.data?.message || error.message,
+    };
+  }
+};

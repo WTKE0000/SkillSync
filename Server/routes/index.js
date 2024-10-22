@@ -7,6 +7,7 @@ import jobRoute from "./jobsRoutes.js";
 import applicationsRoute from "./applicationsRoutes.js";
 import interviewRoutes from "./interviewsRoutes.js";
 import adminRoutes from "./adminRoutes.js";
+import paymentRoutes from "./paymentRoute.js";
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use(`${path}jobs`, jobRoute);
 router.use(`${path}applications`, applicationsRoute);
 router.use(`${path}interviews`, interviewRoutes);
 router.use(`${path}admin`, adminRoutes);
+router.use(`${path}payment`, paymentRoutes)
 
 export default router;

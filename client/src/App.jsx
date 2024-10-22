@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 import Applicants from "./pages/applicants";
 import Interview from "./pages/interview";
 import UserInterview from "./pages/userInterviews";
+import SubscriptionPage from "./pages/SubscriptionPage"
+import PaymentForm from "./components/PaymentForm";
 
 function Layout() {
   const { user } = useSelector((state) => state.user);
@@ -68,6 +70,9 @@ function App() {
 
 
         </Route>
+        <Route path={"/premium"} element={<SubscriptionPage/>} />
+        <Route path={"/premium-payment"} element={<PaymentForm/>} />
+        
 
         <Route path='/about-us' element={<About />} />
         <Route path='/user-auth' element={<AuthPage />} />
