@@ -19,13 +19,12 @@ const PORT = process.env.PORT || 8800;
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://skillsynccc.netlify.app', 'http://localhost:5173'],
+  origin: ['https://skillsynccc.netlify.app', 'http://localhost:5173', 'https://skillsync-4.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200
 };
-
 // Apply CORS middleware immediately after app initialization
 app.use(cors(corsOptions));
 

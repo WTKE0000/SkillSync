@@ -13,7 +13,8 @@ const s3Client = new S3Client({
 
 
 
-const API_URL = "http://localhost:8800/api-v1";
+// const API_URL = "http://localhost:8800/api-v1";
+const API_URL = "https://skillsync-4.onrender.com/api-v1";
 
 
 export const API = axios.create({
